@@ -64,9 +64,8 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,    // Ensure the cookie is not accessible via JavaScript
       secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
       maxAge: 3600000,   // Cookie expiration in milliseconds (e.g., 1 hour)
-    });
-
-    // Send JWT in response
+    }); // Send JWT in response
+    (req.session as any).username1 = username;      
     res.status(200).json({ message: 'Login Successful'});
   } catch (error) {
     console.error(error);

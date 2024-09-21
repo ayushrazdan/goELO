@@ -13,5 +13,12 @@ router.get('/profile', authenticateJWT, (req, res) => {
   res.json({ message: 'This is a protected route', user: (req as any).user });
 });
 
-
+router.get('/session',authenticateJWT, (req, res) => {
+  const username1 = (req.session as any).username1; // Fetch username1 from session
+  if (username1) {
+    res.json({ username1 });
+  } else {
+    res.status(404).json({ message: 'User not logged in' });
+  }
+});
 export default router;

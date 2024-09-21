@@ -5,8 +5,8 @@ import path from 'path';
 
 export const updateRatings = async (req: Request, res: Response) => {
   const { username1, username2, winner } = req.body;
-
-  if (!username1 || !username2 || typeof winner !== 'number') {
+  const numWinner = Number(winner);
+  if (!username1 || !username2 || isNaN(numWinner)) {
     return res.status(400).json({ message: 'Invalid input' });
   }
 
@@ -30,7 +30,7 @@ export const updateRatings = async (req: Request, res: Response) => {
 
     const K = 32;
 
-    execFile(binaryPath, [player1Rating, player2Rating, winner.toString(), K.toString()], (error: any, stdout: any, stderr: any) => {
+    execFile(binaryPath, [player1Rating, player2Rating, numWinner.toString(), K.toString()], (error: any, stdout: any, stderr: any) => {
       if (error) {
         console.error(`Error calling the ELO calculator: ${stderr}`);
         return res.status(500).json({ message: 'Error calculating ELO rating ' + stderr });

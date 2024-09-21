@@ -73,20 +73,37 @@
             const datalist = document.getElementById('opponents');
             datalist.innerHTML = opponents.map(opponent => `<option value="${opponent}">`).join('');
         }
-
+        let username1 ='';
         fetchOpponents();
-
-        document.getElementById('matchForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+        fetchUsername();
+        document.getElementById('matchForm').addEventListener('submit', e => {
+            e.preventDefault(); 
             
             const opponentUsername = document.getElementById('opponentUsername').value;
             const matchResult = document.getElementById('matchResult').value;
-
             const ratingData = {
-                username1: 'test1',  // Assuming this is fetched from your session
+                username1: username1,  // Assuming this is fetched from your session
                 username2: opponentUsername,
                 winner: matchResult  // -1 for win, 1 for lose, 0 for draw
             };
+            
+            function fetchUsername() {
+            fetch('/api/users/session', {
+                    method: 'GET',
+                    credentials: 'include'  // Enable sending cookies
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('User not logged in');
+                    }
+                })
+                .then(data => {
+                    username1 = username1;
+                    console.log('Username1:', username1);  // For debugging
+                    return data.username1;  // Store username1
+                })
+                .catch(error => console.error('Error fetching username:', error));
+            }
 
             fetch('/api/rating/rating-update', {
                 method: 'POST',
